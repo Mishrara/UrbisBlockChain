@@ -1,0 +1,140 @@
+
+
+.mainBody {
+    text-align: left;
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+
+.column {
+    float: left;
+    padding: 15px;
+    display: table-column;
+}
+.mainDiv::after {
+    content: "";
+    clear: both;
+    display: table;
+    margin-bottom: 20px;
+}
+.InOne {
+    width: 45%;
+}
+.InTwo {
+    width: 45%;
+}
+.InOne ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.InOne li {
+    padding: 8px;
+    margin-bottom: 8px;
+}
+.InOne li:hover {
+    background-color: #0099cc;
+    display: table-cell;
+}
+
+.InTwo ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.InTwo li {
+    padding: 8px;
+    margin-bottom: 8px;
+}
+.InTwo li:hover {
+    background-color: #0099cc;
+}
+
+
+label{
+	font: arial;
+	font-weight: bold;
+	display: table-cell;
+	margin-top: 20;
+}
+input{
+	font: arial;
+	font-weight: bold;
+	display: table-cell;
+	margin-top: 20;
+}
+.column table{
+	border-collapse:separate; 
+border-spacing:1em;
+}
+.button {
+	position: absolute;
+	   left: 45%;
+	   margin-top: 2em;
+}
+.header {background: black;color:white;
+padding: 15px;
+margin-top: 1em;
+border-spacing: 1em;
+float:left;
+clear: both;
+width: 100%}
+.header h1{
+	text-align: center;
+}
+.header ul{
+	float: right;
+	width: 60%;
+	clear: both;
+	text-align: center;
+}
+.footer { 
+    background: #aaa;color:white;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    height: 2em;
+    width: 100%;
+    overflow:hidden;
+    text-align: center;
+    margin-top: 1em;
+    border-spacing:1em;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: #333;
+    width: 70%;
+    float: right;
+    clear:both;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: inline-block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover{
+    background-color: red;
+}
+.navigation{
+	float: left;
+	width: 100%;
+	height: 30%;
+	clear: both;
+	align-content: center;;
+}
+.row_selected
+{
+	bgcolor:gray;
+}

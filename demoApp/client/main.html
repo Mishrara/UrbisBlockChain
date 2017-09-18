@@ -1,0 +1,329 @@
+
+<head>
+  <title>demoApp</title>
+</head>
+
+<body>
+<script type="text/javascript">
+	$("#table tr").click(function(){
+   $(this).addClass('selected').siblings().removeClass('selected');    
+   var value=$(this).find('td:first').html();
+   alert(value);    
+});
+
+$('.ok').on('click', function(e){
+    alert($("#table tr.selected td:first").html());
+});
+</script>
+<!--  -->
+  <!-- {{> transection}} -->
+  {{> main}}
+  
+  
+</body>
+
+<template name="main">
+<div name="flex-container" class="flex-container">
+	<table width="100%">
+		<tr>
+			<div class="logo">
+		
+		</div>
+		<div class="navigation" name="header">
+		<img src="/logouni.png" style="width:20%;height:30px;align-content: center;">
+			<ul>
+			  <li><a href="/">Home</a></li>
+			  <li><a href="/Accounts">Account Def</a></li>
+			  <li><a href="/summary">Summary</a></li>
+			  <li><a href="/Exchange">Exchange Def</a></li>
+			  <li><a href="/Charges">Charges Def</a></li>
+			</ul>
+		</div>
+		</tr>
+	</table>
+	
+	<div class="header">
+		<h1>Cross Border Payment using BlockChain</h1>
+	</div>
+	<br>
+	<br>
+	<br>
+	<div class="mainBody" name="mainBody">
+		{{> yield}}
+	</div>
+	<div name="footer" class="footer">
+		<p>Copyright &copy; Unisys Global Ind Pvt Ltd, 2017</p>
+	</div>
+</div>
+  
+</template>
+
+<template name="transection">
+
+<form>
+<div class="mainDiv">
+	<h2>Transaction Creation</h2>
+	<hr>
+	<div class="column InOne">
+		<table>
+			<tr><label>Debit Account    </label> &nbsp;&nbsp;:&nbsp;&nbsp;
+				<input type="text" name="DebAcc" list="productName"  id="AccDeb"  data-action="task/input" onmouseleave="{{AccountSel}}" required/>
+				<datalist id="productName">
+					{{#each accounts}}
+						<option name = "myOption" value="{{Address}}">{{AccountName}}</option>
+					{{/each}}
+				</datalist>
+			</tr>
+			<tr><label>Transfer Amount  </label> &nbsp;&nbsp;:&nbsp;&nbsp; <input type="text" name="TranAmt" required></tr>
+			<tr><label>Pos Narr  </label> &nbsp;&nbsp;:&nbsp;&nbsp; <input type="text" name="PosNarr" required></tr>
+			<tr><label>Exch Rate  </label>&nbsp;&nbsp;:&nbsp;&nbsp;<input type="text" name="ExchRate" required></tr>
+		</table>
+	</div>
+	<div class="column InTwo">
+		<table>
+			<tr>
+				<label>Credit Account </label>&nbsp;&nbsp;:&nbsp;&nbsp;
+				<input type="text" name="CredAcc" list="productName" required/>
+				<datalist id="productName">
+				    {{#each accounts}}
+						<option name = "myOption" value="{{Address}}">{{AccountName}}</option>
+					{{/each}}
+				</datalist>
+			</tr>
+			<tr><label>Charge Amount    </label> &nbsp;&nbsp;:&nbsp;&nbsp;
+				<input type="text" name="ChargeAmt" list="Charges" required>
+					<datalist id="Charges">
+				    	{{#each Charges}}
+							<option name = "myOption" value="{{Amount}}"  id="{{ToAccount}}">{{Name}} - Acc: {{ToAccount}}</option>
+						{{/each}}
+					</datalist></tr>
+			<tr><label>Val Date  </label>&nbsp;&nbsp;:&nbsp;&nbsp;<input type="text" name="ValDate" required></tr>
+			<tr><label>Ordering Party Details  </label> &nbsp;&nbsp;:&nbsp;&nbsp; <input type="text" name="OrderingPartyName" required  placeholder="Name">
+			<br><br> &nbsp;&nbsp;:&nbsp;&nbsp; <input type="text" name="OrderingPartyAdd" required  placeholder="Address"> 
+			<br><br> &nbsp;&nbsp;:&nbsp;&nbsp; <input type="text" name="OrderingPartyPhone" required  placeholder="Phone"></tr>
+		</table>
+	</div>
+</div>
+<input type="submit" name="create" class="button" value="Create Transection">
+<hr>
+<br/>
+<br/>
+</form>
+<br>
+<br>
+</template>
+<template name="summary">
+<h2>Transaction Datails</h2>
+<table style="width:100%" border="1">
+  <tr>
+  <th> </th>
+  	<th>Contract Number</th>
+    <th>From Account</th>
+    <th>To Account</th>
+    <th>Amount</th>
+	<th>Charge Amount</th>
+	<th>Pos Narr</th>
+	<th>Val Date</th>
+	<th>Exch Rate</th>
+	<th>Ordering Party Det</th>
+  </tr>
+  {{#each summaries}}
+  {{> summaryTab}}
+{{/each}}
+
+</table>
+<br>
+<br>
+<br>
+<h2>Transaction Charges</h2>
+<table style="width:100%" border="1">
+  <tr>
+  	<th>Contract Number</th>
+   	<th>Amount</th>
+	<th>To Account</th>
+  </tr>
+  {{#each summaries}}
+  {{> chargeRegTab}}
+{{/each}}
+
+</table>
+<br>
+<button class="button" data-action="task/Transect">Transect</button>
+<br>
+<br>
+<br>
+<br>
+
+</template>
+<template name="summaryTab">
+<tr bgcolor="{{getStatusColor Completed}}" data-action="task/tr" data-mongoId={{rowId}} id="{{TranNum}}">
+	<td><input type="radio" name="selectedRow" {{getStatus Completed}}></td>
+    <td>{{ContNum}}</td>
+    <td>{{getAccountName DebitAccount}}</td>
+    <td>{{getAccountName CreditAccount}}</td>
+    <td>{{Amount}}</td>
+    <td>{{ChargeAmt}}</td>
+	<td>{{PosNarr}}</td>
+	<td>{{ValDate}}</td>
+	<td>{{ExchRate}}</td>
+	<td>{{OrderingPartyDet}}</td>
+</tr>
+</template>
+
+<template name="chargeRegTab">
+<tr data-action="task/tr" data-mongoId={{rowId}} id="{{TranNum}}">
+    <td>{{ContNum}}</td>
+    <td>{{ChargeAmount}}</td>
+    <td>{{getAccountNameDet CredAccAddress}}</td>
+</tr>
+</template>
+
+<template name="ExchRateDef">
+
+<form>
+	<div class="mainDiv">
+		<h2>Exchange Rate Creation (Ether as base currency)</h2>
+		<br>
+		<hr>
+		<div class="column InOne">
+			<table>
+				<tr><label>Exchange Rate</label>&nbsp;&nbsp;:&nbsp;&nbsp;<input type="text" name="ExchangeRate"></tr>
+			</table>
+		</div>
+		<div class="column InTwo">
+			<table>
+				<tr><label>Currency To</label>&nbsp;&nbsp;:&nbsp;&nbsp;<input type="text" name="CurrencyTo"></tr>
+			</table>
+		</div>	
+	</div>
+	<br>
+	<hr>
+	<button class="button" data-action="task/create">Create Exch Def</button>
+	<!-- <input type="submit" id="createExch" class="button" value="Create Exch Def" data-action="task/create"> -->
+
+	<!-- <input type="submit" id="delete" class="button" value="Del Exch Def" data-action="task/delete"> -->
+	<br>
+	<br>
+</form>
+<br>
+<hr>
+<h2>Exchange Rate Datails</h2>
+<table style="width:100%" border="1">
+ 
+  <tr>
+    <th>Exchange Rate</th>
+	<th>Currency To</th>
+  </tr>
+  {{#each ExchRateSummary}}
+  <tr>
+    <td>{{ExchRate}}</td>
+    <td>{{CCYTo}}</td>
+  </tr>
+{{/each}}
+
+</table>
+
+	<button class="button" data-action="task/delete">Delete</button>
+	<br>
+	<br>
+	<br>
+<br>
+</template>
+
+<template name="AccountsDef">
+<form>
+	<div class="mainDiv">
+		<h2>Add Account Details</h2>
+		<hr>
+		<div class="column InOne">
+			<table>
+				<tr><label>Account Name</label>&nbsp;&nbsp;:&nbsp;&nbsp;<input type="text" name="AccName"></tr>
+				<tr><label>Account Address </label>&nbsp;&nbsp;:&nbsp;&nbsp;<input type="text" name="AccAddr"></tr>
+			</table>
+		</div>
+		<div class="column InTwo">
+			<table>
+				<tr><label>Currency:</label>&nbsp;&nbsp;:&nbsp;&nbsp;<input type="text" name="CCY"></tr>
+			</table>
+		</div>	
+	</div>
+	<br>
+	<hr>
+	<input type="submit" name="AddAcc" class="button" value="Add Account">
+	<br>
+	<br>
+</form>
+<br>
+<br>
+<hr>
+<h2>Account Datails</h2>
+<table style="width:100%" border="1">
+  <tr>
+  	<th>Account Address</th>
+    <th>Account Name</th>
+    <th>Currency</th>
+    <th>Balance</th>
+  </tr>
+  {{#each accountDet}}
+  <tr>
+   	<td>{{Address}}</td>
+    <td>{{AccountName}}</td>
+    <td>{{CCY}}</td>
+    <td>{{getBalance Address}}</td>
+  </tr>
+{{/each}}
+</table>
+</template>
+
+
+<template name="ChargeDef">
+<form>
+	<div class="mainDiv">
+		<h2>Add Charge Details</h2>
+		<hr>
+		<div class="column InOne">
+			<table>
+				<tr><label>Name </label>&nbsp;&nbsp;:&nbsp;&nbsp;<input type="text" name="Name"></tr>
+				<tr><label>Description </label>&nbsp;&nbsp;:&nbsp;&nbsp;<input type="text" name="Description"></tr>
+			</table>
+		</div>
+		<div class="column InTwo">
+			<table>
+				<tr><label>To Account :</label>&nbsp;&nbsp;:&nbsp;&nbsp;<input type="text" name="ToAccount"></tr>
+				<tr><label>Charge :</label>&nbsp;&nbsp;:&nbsp;&nbsp;<input type="text" name="Amount"></tr>
+			</table>
+		</div>	
+	</div>
+	<br>
+	<hr>
+	<input type="submit" class="button" value="Add Charges">
+	<br>
+	<br>
+</form>
+<br>
+<br>
+<hr>
+<h2>Charge Datails</h2>
+<table style="width:100%" border="1">
+  <tr>
+  	<th>Name</th>
+    <th>To Account</th>
+    <th>Description</th>
+    <th>Charge Amount</th>
+  </tr>
+  {{#each chargeDet}}
+  <tr>
+   	<td>{{Name}}</td>
+    <td>{{ToAccount}}</td>
+    <td>{{Desc}}</td>
+    <td>{{Amount}}</td>
+  </tr>
+{{/each}}
+</table>
+<br>
+<br>
+</template>
+
+
+
+<!-- ("enode://69762adafdd1567b68089f5094100cb2b499b206128398dbf16469b977fee4a3781dff3b88c4f75b8c4491b6d273c46f5f8563baf1b6b7342d4b2d38a0f92a0a@129.221.252.41:30303") -->

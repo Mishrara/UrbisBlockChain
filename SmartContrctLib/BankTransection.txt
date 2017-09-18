@@ -1,0 +1,67 @@
+pragma solidity ^0.4.8;
+contract CpayaUrbNew {
+	uint public numTrans = 0;
+	struct Transection {
+		int contractNumber;
+		uint amount;
+		uint chrgAmt;
+		address eth_DebAccAddress;
+		address eth_CredAccAddress;
+		bytes32 PosNarr;
+		bytes32 ValDate;
+		bytes32 ExchRate;
+		bytes ordrPartyDetails;
+		uint completed;
+		uint tranNum;
+	}
+
+	struct ChargeAmount{
+		int 	contractNumber;
+		uint 	chrgeAmt;
+		address CredAccAddress;
+		uint 	completed;
+		uint 	tranNum;
+	}
+  mapping(uint => Transection) public Transections;
+  mapping(uint => ChargeAmount) public ChargeAmounts;
+  
+  function chargeReg(int contNum,address credAccAdd) payable {
+	if(msg.value == 0) throw;
+	ChargeAmounts[numTrans] = ChargeAmount(contNum,msg.value,credAccAdd,0,numTrans);
+	numTrans++;
+  }
+  
+  function transect(int contNum,address DebAcc,address CredAcc,uint chrgAmt,
+  bytes32 PosNarr,bytes32 ValDate,bytes32 ExchRate,bytes ordrPartyDetails) payable {
+    if (msg.value == 0) throw;
+    Transections[numTrans] = Transection(contNum,msg.value,chrgAmt, DebAcc,CredAcc, PosNarr,ValDate,ExchRate,ordrPartyDetails,0,numTrans);
+  }
+  function getBal() constant returns (uint) {
+    return this.balance;
+  }
+  function transfer(uint tranNum) {
+    if(!Transections[tranNum].eth_CredAccAddress.send(Transections[tranNum].amount))
+      throw;
+	  Transections[tranNum].completed = 1;
+	if(!ChargeAmounts[tranNum].CredAccAddress.send(ChargeAmounts[tranNum].chrgeAmt))
+	  throw;
+	  ChargeAmounts[tranNum].completed = 1;
+  }
+
+  function getAccDetails(uint tranNum) constant returns (int contNum,address DebAcc,address CredAcc,uint chrgAmt)
+  {
+	return (Transections[tranNum].contractNumber,Transections[tranNum].eth_DebAccAddress, Transections[tranNum].eth_CredAccAddress,Transections[tranNum].chrgAmt);
+  }
+  function getNarrDetails(uint tranNum) constant returns (bytes32 PosNarr,bytes32 ValDate)
+  {
+	return (Transections[tranNum].PosNarr,Transections[tranNum].ValDate);
+  }
+  function getEXCHDetails(uint tranNum) constant returns (bytes32 ExchRate,bytes ordrPartyDetails,uint complete,uint transNum,uint amount)
+  {
+	return (Transections[tranNum].ExchRate,Transections[tranNum].ordrPartyDetails,Transections[tranNum].completed,Transections[tranNum].tranNum,Transections[tranNum].amount);
+  }
+  function getChargeAmtDet(uint tranNum) constant returns (int contNum,uint chrgeAmt,address credAccAdd, uint complete)
+  {
+	return (ChargeAmounts[tranNum].contractNumber,ChargeAmounts[tranNum].chrgeAmt,ChargeAmounts[tranNum].CredAccAddress,ChargeAmounts[tranNum].completed);
+  }
+}

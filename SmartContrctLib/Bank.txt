@@ -1,0 +1,28 @@
+pragma solidity 0.4.8;
+
+contract bnkTransfer {
+
+	uint public numPledges;
+	struct Transect {
+    uint amount;
+    address eth_address;
+    string message;
+  }
+  mapping(uint => Transect) public Transects;
+  
+  function transect(string _message, address recAcc) {
+    if (msg.value == 0) throw;
+    Transects[numPledges] = Transect(msg.value, recAcc, _message);
+    numPledges++;
+  }
+  
+  function getPot() constant returns (uint) {
+    return this.balance;
+  }
+  function transfer(uint tranNum) {
+    if(amount > this.balance || amount > Transects[tranNum].amount) throw;
+    if(!Transects[tranNum].eth_address.send(Transects[tranNum].amount))
+      throw;
+    }
+	
+}
